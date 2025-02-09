@@ -1,18 +1,42 @@
 import streamlit as st
-import subprocess
-import sys
+import streamlit.components.v1 as components
 
-# Seitenmenü erstellen
-st.sidebar.title("📌 Hauptmenü")
-option = st.sidebar.radio("Wähle einen Rechner:", [
-    "🏠 Haushaltsrechner",
-    "📊 Altersvorsorgerechner",
-    "🏡 Baufinanzierungsrechner",
-    "💰 Finanzierungsbedarfsrechner",
-    "💳 Kreditrechner",
-    "💸 Inflationsrechner",
-    "🏡 Bausparrechner"
-])
+# Set page config
+st.set_page_config(page_title="Finanzrechner", page_icon="💰", layout="wide")
+
+# Custom CSS for modern button grid
+st.markdown(
+    """
+    <style>
+    .button-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        justify-content: center;
+    }
+    .button-grid button {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 15px 30px;
+        text-align: center;
+        font-size: 18px;
+        margin: 10px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .button-grid button:hover {
+        background-color: #45a049;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# App Title
+st.title("💰 Finanzrechner Übersicht")
+st.markdown("Wähle einen Rechner aus, um loszulegen:")
 
 # Mapping der Auswahl auf Python-Dateien
 rechner_mapping = {
@@ -25,8 +49,17 @@ rechner_mapping = {
     "🏡 Bausparrechner": "bausparer09.02.py"
 }
 
+# Moderne Button-Grid
+selected_option = None
+st.markdown('<div class="button-grid">', unsafe_allow_html=True)
+for label in rechner_mapping.keys():
+    if st.button(label):
+        selected_option = label
+st.markdown('</div>', unsafe_allow_html=True)
+
 # Die entsprechende Datei ausführen
-if option in rechner_mapping:
-    script_path = rechner_mapping[option]
-    st.write(f"Lade **{option}**...")
+if selected_option:
+    script_path = rechner_mapping[selected_option]
+    st.write(f"Lade **{selected_option}**...")
     exec(open(script_path).read(), globals())
+
